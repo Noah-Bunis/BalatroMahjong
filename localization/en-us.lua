@@ -124,6 +124,14 @@ return {
             a_sold_tally="#1#/#2# Sold",
             a_xmult="X#1# Mult",
             a_xmult_minus="-X#1# Mult",
+        },
+
+        poker_hand_descriptions = {
+            Mahjong = "A standard Mahjong hand consisting of",
+            "4 sets of Pungs or Chows and a Pair.",
+        },
+        poker_hands = {
+            Mahjong = "Mahjong",
         }
     }
 }
