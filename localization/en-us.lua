@@ -127,8 +127,8 @@ return {
         },
 
         poker_hand_descriptions = {
-            Mahjong = "A standard Mahjong hand consisting of",
-            "4 sets of Pungs or Chows and a Pair.",
+            ["sj_Mahjong"] = {"A standard Mahjong hand consisting of",
+            "4 sets of Pungs or Chows and a Pair.", }
         },
         poker_hands = {
             Mahjong = "Mahjong",

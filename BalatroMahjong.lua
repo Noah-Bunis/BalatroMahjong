@@ -9,7 +9,13 @@ for _, file in ipairs(joker_src) do
 end
 
 -- Poker Hands
-local joker_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "pokerhands")
-for _, file in ipairs(joker_src) do
+local pokerhands_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "pokerhands")
+for _, file in ipairs(pokerhands_src) do
     assert(SMODS.load_file("pokerhands/" .. file))()
+end
+
+-- Decks
+local decks_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "decks")
+for _, file in ipairs(decks_src) do
+    assert(SMODS.load_file("decks/" .. file))()
 end
