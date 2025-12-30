@@ -129,9 +129,11 @@ return {
         poker_hand_descriptions = {
             ["bm_Mahjong"] = {"A standard Mahjong hand consisting of",
             "4 sets of Pungs or Chows and a Pair.", },
+            ["bm_Tanyao"] = {"A Mahjong hand that does not contain any honor cards or terminals({C:attention}King{} or {C:attention}Ace{})",}
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
+            ["bm_Tanyao"] = "Tanyao",
         }
     }
 }

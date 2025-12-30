@@ -7,13 +7,25 @@ SMODS.PokerHand {
     example = {{'S_A', true}, {'S_A', true}, {'S_2', true}, {'S_3', true}, {'S_4', true}, {'C_5', true}, {'C_6', true},
                {'C_7', true}, {'D_9', true}, {'D_T', true}, {'D_J', true}, {'H_5', true}, {'H_5', true}, {'H_5', true}},
     evaluate = function(parts, hand)
-        if not (#parts.bm_mahjong_groups > 0) then return {} end
+        if not (#parts.bm_mahjong > 0) then return {} end
         return { hand }
+    end,
+    modify_display_text = function(self, cards, scoring_hand)
+        local tanyao = true
+        for j = 1, #scoring_hand do
+            local rank = SMODS.Ranks[scoring_hand[j].base.value]
+            if rank.key == "Ace" or rank.key == "King" then
+                tanyao = false
+            end
+        end
+        if tanyao then
+            return "bm_Tanyao"
+        end
     end
 }
 
 SMODS.PokerHandPart {
-    key = "mahjong_groups",
+    key = "mahjong",
     func = function(hand)
         if #hand ~= 14 then return {} end
         
