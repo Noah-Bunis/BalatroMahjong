@@ -4,7 +4,7 @@
   "display_name": "BalatroMahjong",
   "author": ["Keyboard Noah"],
   "description": "BalatroMahjong mod, a base to start modding Balatro!",
-  "prefix": "sj",
+  "prefix": "bm",
   "prefixcomment":"ABOVE PREFIX IS ADDED TO E.G. LOCALIZATION!",
   "main_file": "BalatroMahjong.lua",
   "priority": 0,
