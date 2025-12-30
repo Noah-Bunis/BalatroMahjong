@@ -9,60 +9,63 @@ SMODS.PokerHand {
     evaluate = function(parts, hand)
         if not (#hand > 13) then return {} end
         if not (#parts.bm_unique_flush_2 > 0) then return {} end -- needs to be a unique flush pair
-        if not (#parts.bm_unique_flush_3 > 3) then return {} end -- needs to be flush threes
-        --[[if not #hand ~= 14 then
-            return {}
-        end
-        if #parts._2 < 1 then
-            return {}
-        end
-        local pungs = #parts._3
-        local chows = get_chow(hand)
-        local chow_count = #chows--]]
-        return { hand }
+        if not ((#parts.bm_unique_flush_3 + #parts.bm_chow) > 3) then return {} end -- needs to be flush threes
+        return { hand } -- shared unique pair and chow false negative ex. C_5 C_5  C_5 C_6 C_7 fails
     end
 }
 
-function get_chow(hand)
-    local ret = {}
-    local chow_count = 0
-    if #hand < 3 then
-        return ret
-    end
-    local SUITS = {}
-    for i = 1, #hand do
-        local card = hand[i]
-        local suit = card.suit
-        if not SUITS[suit] then
-            SUITS[suit] = {}
+SMODS.PokerHandPart {
+    key = "chow",
+    func = function(hand)
+        local ret = {}
+        if #hand < 3 then
+            return ret
         end
-        table.insert(SUITS[suit], card)
-    end
-    for suit, cards in pairs(SUITS) do
-        if #cards >= 3 then
-            local sorted = {}
-            for i = 1, #cards do
-                table.insert(sorted, {
-                    card = cards[i],
-                    id = cards[i]:get_id()
-                })
+        
+        local suits = {
+            "Spades",
+            "Hearts",
+            "Clubs",
+            "Diamonds"
+        }
+        
+        for j = 1, #suits do
+            local suit = suits[j]
+            local suit_cards = {}
+            
+            for i = 1, #hand do
+                if hand[i]:is_suit(suit, nil, true) then
+                    table.insert(suit_cards, hand[i])
+                end
             end
-            table.sort(sorted, function(a, b)
-                return a.id < b.id
-            end)
-            local i = 1
-            while i <= #sorted - 2 do
-                if sorted[i].id + 1 == sorted[i + 1].id and sorted[i + 1].id + 1 == sorted[i + 2].id then
-                    table.insert(ret, {sorted[i].card, sorted[i + 1].card, sorted[i + 2].card})
-                    i = i + 3
-                else
-                    i = i + 1
+            
+            if #suit_cards >= 3 then
+                local sorted = {}
+                for i = 1, #suit_cards do
+                    table.insert(sorted, {
+                        card = suit_cards[i],
+                        id = suit_cards[i]:get_id()
+                    })
+                end
+                table.sort(sorted, function(a, b)
+                    return a.id < b.id
+                end)
+                
+                local i = 1
+                while i <= #sorted - 2 do
+                    if sorted[i].id + 1 == sorted[i + 1].id and sorted[i + 1].id + 1 == sorted[i + 2].id then
+                        table.insert(ret, {sorted[i].card, sorted[i + 1].card, sorted[i + 2].card})
+                        i = i + 3
+                    else
+                        i = i + 1
+                    end
                 end
             end
         end
+        
+        return ret
     end
-    return ret
-end
+}
 
 SMODS.PokerHandPart {
     key = "unique_flush_2",
@@ -90,7 +93,7 @@ SMODS.PokerHandPart {
             end
             
             for rank, cards in pairs(rank_groups) do
-                if #cards >= 2 and #cards < 3 then
+                if #cards == 2 then
                     table.insert(ret, {cards[1], cards[2]})
                 end
             end
