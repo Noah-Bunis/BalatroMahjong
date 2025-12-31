@@ -24,6 +24,21 @@ SMODS.PokerHand {
     end
 }
 
+SMODS.PokerHand {
+    key = "Seven Pairs",
+    mult = 22,
+    chips = 222,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'S_A', true}, {'S_A', true}, {'S_2', true}, {'S_2', true}, {'H_5', true}, {'H_5', true}, {'C_7', true}, 
+                {'C_7', true}, {'D_9', true}, {'D_9', true}, {'C_3', true}, {'C_3', true}, {'C_K', true}, {'C_K', true}},
+    evaluate = function(parts, hand)
+        if #hand ~= 14 then return {} end
+        if not (#parts.bm_unique_flush_2 > 6) then return {} end
+        return { hand }
+    end
+}
+
 SMODS.PokerHandPart {
     key = "mahjong",
     func = function(hand)
@@ -226,7 +241,7 @@ SMODS.PokerHandPart {
         
         return ret
     end
-}
+}--]]
 
 SMODS.PokerHandPart {
     key = "unique_flush_2",
@@ -263,7 +278,7 @@ SMODS.PokerHandPart {
         return ret
     end
 }
-
+--[[
 SMODS.PokerHandPart {
     key = "unique_flush_3",
     func = function(hand)
