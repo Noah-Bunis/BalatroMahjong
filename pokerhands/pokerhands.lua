@@ -11,14 +11,23 @@ SMODS.PokerHand {
         return { hand }
     end,
     modify_display_text = function(self, cards, scoring_hand)
-        local tanyao = true
+        local tanyao = true -- no honors or teminals
+        local honroutou = true -- all honors or terminals
+        local chinroutou = true -- all terminals
         for j = 1, #scoring_hand do
             local rank = SMODS.Ranks[scoring_hand[j].base.value]
             if rank.key == "Ace" or rank.key == "King" then
                 tanyao = false
+            else
+                honroutou = false -- to do: create honor flag
+                chinroutou = false
             end
         end
-        if tanyao then
+        if chinroutou then
+            return "bm_Chinroutou"
+        elseif honroutou then
+            return "bm_Honroutou"
+        elseif tanyao then
             return "bm_Tanyao"
         end
     end
@@ -190,7 +199,7 @@ SMODS.PokerHandPart {
     end
 }
 
---[[SMODS.PokerHandPart {
+SMODS.PokerHandPart {
     key = "chow",
     func = function(hand)
         local ret = {}
@@ -241,7 +250,7 @@ SMODS.PokerHandPart {
         
         return ret
     end
-}--]]
+}
 
 SMODS.PokerHandPart {
     key = "unique_flush_2",

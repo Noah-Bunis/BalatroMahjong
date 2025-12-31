@@ -129,12 +129,16 @@ return {
         poker_hand_descriptions = {
             ["bm_Mahjong"] = {"A standard Mahjong hand consisting of",
             "4 sets of Pungs or Chows and a Pair.", },
-            ["bm_Tanyao"] = {"A Mahjong hand that does not contain any honor cards or terminals (Kings or Aces).",},
+            ["bm_Tanyao"] = {"A Mahjong hand that does not contain any honor cards or terminals (Kings or Aces)."},
+            ["bm_Honroutou"] = {"A Mahjong hand that contains only honor cards or terminals (Kings or Aces)."},
+            ["bm_Chinroutou"] = {"A Mahjong hand that contains only terminals (Kings or Aces)."},
             ["bm_Seven Pairs"] = {"Seven unique Pairs."}
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
             ["bm_Tanyao"] = "Tanyao",
+            ["bm_Honroutou"] = "Honroutou",
+            ["bm_Chinroutou"] = "Chinroutou",
             ["bm_Seven Pairs"] = "Seven Pairs"
         }
     }
