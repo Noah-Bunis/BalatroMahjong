@@ -1,5 +1,15 @@
 return {
     descriptions = {
+        Back = {
+            b_bm_mahjong_red = {
+                name = "Mahjong Red Deck",
+                text = {
+                    "Standard Mahjong deck,",
+                    "{C:red}+#1#{} discard",
+                    "every round",
+                },
+            },
+        },
         Joker = {
             j_bm_sample_wee = {
                 name = "Sample Wee",
