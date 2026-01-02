@@ -144,7 +144,8 @@ return {
             ["bm_Chinroutou"] = {"A Mahjong hand that contains only terminals (Kings or Aces)."},
             ["bm_Seven Pairs"] = {"Seven unique Pairs."},
             ["bm_Pure Double Chi"] = {"Two identical Chows in the same suit."},
-            ["bm_Twice Pure Double Chi"] = {"Two sets of Pure Double Chi in the same suit."}
+            ["bm_Twice Pure Double Chi"] = {"Two sets of Pure Double Chi in the same suit."},
+            ["bm_Outside Hand"] = {"A Mahjong hand where all sets contain at least one terminal (King or Ace) or Honor."},
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
@@ -154,6 +155,7 @@ return {
             ["bm_Seven Pairs"] = "Seven Pairs",
             ["bm_Pure Double Chi"] = "Pure Double Chi",
             ["bm_Twice Pure Double Chi"] = "Twice Pure Double Chi",
+            ["bm_Outside Hand"] = "Outside Hand",
         },
         ranks = {
             bm_North = "North",
