@@ -2,7 +2,7 @@
 SMODS.Rank {
     key = 'North',
     card_key = 'N',
-    pos = {x = 0, y = 0},
+    pos = {x = 3, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'N',
@@ -15,7 +15,7 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'East',
     card_key = 'E',
-    pos = {x = 0, y = 0},
+    pos = {x = 4, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'E',
@@ -28,7 +28,7 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'South',
     card_key = 'S',
-    pos = {x = 0, y = 0},
+    pos = {x = 5, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'S',
@@ -41,7 +41,7 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'West',
     card_key = 'We',
-    pos = {x = 0, y = 0},
+    pos = {x = 6, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'We',
@@ -68,7 +68,7 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'Green',
     card_key = 'G',
-    pos = {x = 0, y = 0},
+    pos = {x = 1, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'G',
@@ -81,7 +81,7 @@ SMODS.Rank {
 SMODS.Rank {
     key = 'White',
     card_key = 'Wh',
-    pos = {x = 0, y = 0},
+    pos = {x = 2, y = 0},
     nominal = 25,
     bm_honor = true,
     shorthand = 'Wh',
