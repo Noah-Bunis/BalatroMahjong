@@ -16,10 +16,14 @@ SMODS.PokerHand {
         local chinroutou = true -- all terminals
         for j = 1, #scoring_hand do
             local rank = SMODS.Ranks[scoring_hand[j].base.value]
+            local honor = rank.bm_honor
             if rank.key == "Ace" or rank.key == "King" then
                 tanyao = false
+            elseif honor then
+                chinroutou = false
+                tanyao = false
             else
-                honroutou = false -- to do: create honor flag
+                honroutou = false
                 chinroutou = false
             end
         end
@@ -57,7 +61,9 @@ SMODS.PokerHandPart {
             "Spades",
             "Hearts",
             "Clubs",
-            "Diamonds"
+            "Diamonds",
+            "bm_Winds",
+            "bm_Dragons"
         }
         
         local validate_and_get_groups
@@ -211,7 +217,9 @@ SMODS.PokerHandPart {
             "Spades",
             "Hearts",
             "Clubs",
-            "Diamonds"
+            "Diamonds",
+            "bm_Winds",
+            "bm_Dragons"
         }
         
         for j = 1, #suits do
@@ -260,7 +268,9 @@ SMODS.PokerHandPart {
             "Spades",
             "Hearts",
             "Clubs",
-            "Diamonds"
+            "Diamonds",
+            "bm_Winds",
+            "bm_Dragons"
         }
         
         for j = 1, #suits do

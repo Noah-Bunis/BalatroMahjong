@@ -150,6 +150,23 @@ return {
             ["bm_Honroutou"] = "Honroutou",
             ["bm_Chinroutou"] = "Chinroutou",
             ["bm_Seven Pairs"] = "Seven Pairs"
+        },
+        ranks = {
+            bm_North = "North",
+            bm_East = "East",
+            bm_South = "South",
+            bm_West = "West",
+            bm_Red = "Red",
+            bm_Green = "Green",
+            bm_White = "White",
+        },
+        suits_plural = {
+            bm_Winds = "Winds",
+            bm_Dragons = "Dragons",
+        },
+        suits_singular = {
+            bm_Winds = "Wind",
+            bm_Dragons = "Dragon",
         }
     }
 }

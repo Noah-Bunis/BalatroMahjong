@@ -1,4 +1,4 @@
-SampleJimbos = {}
+BalatroMahjong = {}
 
 assert(SMODS.load_file("globals.lua"))()
 
@@ -18,4 +18,16 @@ end
 local decks_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "decks")
 for _, file in ipairs(decks_src) do
     assert(SMODS.load_file("decks/" .. file))()
+end
+
+-- Ranks
+local ranks_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "ranks")
+for _, file in ipairs(ranks_src) do
+    assert(SMODS.load_file("ranks/" .. file))()
+end
+
+-- Suits
+local suits_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "suits")
+for _, file in ipairs(suits_src) do
+    assert(SMODS.load_file("suits/" .. file))()
 end
