@@ -100,10 +100,10 @@ SMODS.PokerHandPart {
                     end
                     
                     for rank, indices in pairs(rank_groups) do
-                        if #indices == 3 then
+                        if #indices >= 3 then
                             local new_hand = {}
                             local used = {}
-                            for k = 1, #indices do
+                            for k = 1, 3 do
                                 used[suit_indices[indices[k]]] = true
                             end
                             for i = 1, #hand do
@@ -205,7 +205,7 @@ SMODS.PokerHandPart {
     end
 }
 
-SMODS.PokerHandPart {
+--[[SMODS.PokerHandPart {
     key = "chow",
     func = function(hand)
         local ret = {}
@@ -258,7 +258,7 @@ SMODS.PokerHandPart {
         
         return ret
     end
-}
+} --]]
 
 SMODS.PokerHandPart {
     key = "unique_flush_2",
@@ -297,7 +297,7 @@ SMODS.PokerHandPart {
         return ret
     end
 }
---[[
+    --[[
 SMODS.PokerHandPart {
     key = "unique_flush_3",
     func = function(hand)
