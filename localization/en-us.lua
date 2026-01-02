@@ -142,14 +142,18 @@ return {
             ["bm_Tanyao"] = {"A Mahjong hand that does not contain any honor cards or terminals (Kings or Aces)."},
             ["bm_Honroutou"] = {"A Mahjong hand that contains only honor cards or terminals (Kings or Aces)."},
             ["bm_Chinroutou"] = {"A Mahjong hand that contains only terminals (Kings or Aces)."},
-            ["bm_Seven Pairs"] = {"Seven unique Pairs."}
+            ["bm_Seven Pairs"] = {"Seven unique Pairs."},
+            ["bm_Pure Double Chi"] = {"Two identical Chows in the same suit."},
+            ["bm_Twice Pure Double Chi"] = {"Two sets of Pure Double Chi in the same suit."}
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
             ["bm_Tanyao"] = "Tanyao",
             ["bm_Honroutou"] = "Honroutou",
             ["bm_Chinroutou"] = "Chinroutou",
-            ["bm_Seven Pairs"] = "Seven Pairs"
+            ["bm_Seven Pairs"] = "Seven Pairs",
+            ["bm_Pure Double Chi"] = "Pure Double Chi",
+            ["bm_Twice Pure Double Chi"] = "Twice Pure Double Chi",
         },
         ranks = {
             bm_North = "North",
