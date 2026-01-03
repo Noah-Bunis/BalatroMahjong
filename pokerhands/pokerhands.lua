@@ -1,3 +1,157 @@
+local SUITS = {"Spades", "Hearts", "Clubs", "Diamonds", "bm_Winds", "bm_Dragons"}
+
+local function validate_and_get_groups(hand, num_groups)
+    if num_groups == 0 then
+        return #hand == 0 and {} or nil
+    end
+    if #hand < 3 then
+        return nil
+    end
+
+    for j = 1, #SUITS do
+        local suit = SUITS[j]
+        local suit_cards = {}
+        local suit_indices = {}
+
+        for i = 1, #hand do
+            if hand[i]:is_suit(suit, nil, true) then
+                table.insert(suit_cards, hand[i])
+                table.insert(suit_indices, i)
+            end
+        end
+
+        if #suit_cards >= 3 then
+            local rank_groups = {}
+            for i = 1, #suit_cards do
+                local rank = suit_cards[i]:get_id()
+                if not rank_groups[rank] then
+                    rank_groups[rank] = {}
+                end
+                table.insert(rank_groups[rank], i)
+            end
+
+            for rank, indices in pairs(rank_groups) do
+                if #indices >= 3 then
+                    local new_hand = {}
+                    local used = {}
+                    for k = 1, 3 do
+                        used[suit_indices[indices[k]]] = true
+                    end
+                    for i = 1, #hand do
+                        if not used[i] then
+                            table.insert(new_hand, hand[i])
+                        end
+                    end
+
+                    local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
+                    if rest_groups then
+                        local triplet = {suit_cards[indices[1]], suit_cards[indices[2]], suit_cards[indices[3]]}
+                        table.insert(rest_groups, 1, triplet)
+                        return rest_groups
+                    end
+                end
+            end
+
+            local rank_groups_chow = {}
+            for i = 1, #suit_cards do
+                local rank = suit_cards[i]:get_id()
+                if not rank_groups_chow[rank] then
+                    rank_groups_chow[rank] = {}
+                end
+                table.insert(rank_groups_chow[rank], {
+                    card = suit_cards[i],
+                    hand_index = suit_indices[i]
+                })
+            end
+
+            local sorted_ranks = {}
+            for rank, _ in pairs(rank_groups_chow) do
+                table.insert(sorted_ranks, rank)
+            end
+            table.sort(sorted_ranks)
+
+            for k = 1, #sorted_ranks - 2 do
+                local rank1 = sorted_ranks[k]
+                local rank2 = sorted_ranks[k + 1]
+                local rank3 = sorted_ranks[k + 2]
+
+                if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
+                    if rank_groups_chow[rank1] and rank_groups_chow[rank2] and rank_groups_chow[rank3] then
+                        local card1 = table.remove(rank_groups_chow[rank1])
+                        local card2 = table.remove(rank_groups_chow[rank2])
+                        local card3 = table.remove(rank_groups_chow[rank3])
+
+                        local new_hand = {}
+                        local used = {}
+                        used[card1.hand_index] = true
+                        used[card2.hand_index] = true
+                        used[card3.hand_index] = true
+
+                        for i = 1, #hand do
+                            if not used[i] then
+                                table.insert(new_hand, hand[i])
+                            end
+                        end
+
+                        local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
+                        if rest_groups then
+                            local chow = {card1.card, card2.card, card3.card}
+                            table.insert(rest_groups, 1, chow)
+                            return rest_groups
+                        end
+
+                        table.insert(rank_groups_chow[rank1], card1)
+                        table.insert(rank_groups_chow[rank2], card2)
+                        table.insert(rank_groups_chow[rank3], card3)
+                    end
+                end
+            end
+        end
+    end
+
+    return nil
+end
+
+local function get_chows(hand)
+    local chow_patterns = {}
+
+    for _, suit in ipairs(SUITS) do
+        local rank_counts = {}
+
+        for i = 1, #hand do
+            if hand[i]:is_suit(suit, nil, true) then
+                local rank = hand[i]:get_id()
+                if not rank_counts[rank] then
+                    rank_counts[rank] = 0
+                end
+                rank_counts[rank] = rank_counts[rank] + 1
+            end
+        end
+
+        local unique_ranks = {}
+        for rank, _ in pairs(rank_counts) do
+            table.insert(unique_ranks, rank)
+        end
+        table.sort(unique_ranks)
+
+        for i = 1, #unique_ranks - 2 do
+            local rank1 = unique_ranks[i]
+            local rank2 = unique_ranks[i + 1]
+            local rank3 = unique_ranks[i + 2]
+
+            if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
+                local chow_count = math.min(rank_counts[rank1], rank_counts[rank2], rank_counts[rank3])
+                if chow_count > 0 then
+                    local pattern = suit .. "-" .. rank1 .. "-" .. rank2 .. "-" .. rank3
+                    chow_patterns[pattern] = chow_count
+                end
+            end
+        end
+    end
+
+    return chow_patterns
+end
+
 SMODS.PokerHand {
     key = "Mahjong",
     mult = 20,
@@ -17,163 +171,6 @@ SMODS.PokerHand {
         local honroutou = true -- all honors or terminals
         local chinroutou = true -- all terminals
 
-        local suits = {"Spades", "Hearts", "Clubs", "Diamonds", "bm_Winds", "bm_Dragons"}
-
-        local validate_and_get_groups
-        validate_and_get_groups = function(hand, num_groups)
-            if num_groups == 0 then
-                return #hand == 0 and {} or nil
-            end
-            if #hand < 3 then
-                return nil
-            end
-            for j = 1, #suits do
-                local suit = suits[j]
-                local suit_cards = {}
-                local suit_indices = {}
-
-                for i = 1, #hand do
-                    if hand[i]:is_suit(suit, nil, true) then
-                        table.insert(suit_cards, hand[i])
-                        table.insert(suit_indices, i)
-                    end
-                end
-
-                if #suit_cards >= 3 then
-                    -- Try to form a triplet (3 of same rank)
-                    local rank_groups = {}
-                    for i = 1, #suit_cards do
-                        local rank = suit_cards[i]:get_id()
-                        if not rank_groups[rank] then
-                            rank_groups[rank] = {}
-                        end
-                        table.insert(rank_groups[rank], i)
-                    end
-
-                    for rank, indices in pairs(rank_groups) do
-                        if #indices >= 3 then
-                            local new_hand = {}
-                            local used = {}
-                            for k = 1, 3 do
-                                used[suit_indices[indices[k]]] = true
-                            end
-                            for i = 1, #hand do
-                                if not used[i] then
-                                    table.insert(new_hand, hand[i])
-                                end
-                            end
-
-                            local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
-                            if rest_groups then
-                                local triplet = {suit_cards[indices[1]], suit_cards[indices[2]], suit_cards[indices[3]]}
-                                table.insert(rest_groups, 1, triplet)
-                                return rest_groups
-                            end
-                        end
-                    end
-
-                    -- Try to form a chow (consecutive 3 of same suit)
-                    local rank_groups_chow = {}
-                    for i = 1, #suit_cards do
-                        local rank = suit_cards[i]:get_id()
-                        if not rank_groups_chow[rank] then
-                            rank_groups_chow[rank] = {}
-                        end
-                        table.insert(rank_groups_chow[rank], {
-                            card = suit_cards[i],
-                            hand_index = suit_indices[i]
-                        })
-                    end
-
-                    local sorted_ranks = {}
-                    for rank, _ in pairs(rank_groups_chow) do
-                        table.insert(sorted_ranks, rank)
-                    end
-                    table.sort(sorted_ranks)
-
-                    for k = 1, #sorted_ranks - 2 do
-                        local rank1 = sorted_ranks[k]
-                        local rank2 = sorted_ranks[k + 1]
-                        local rank3 = sorted_ranks[k + 2]
-
-                        if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
-                            if rank_groups_chow[rank1] and rank_groups_chow[rank2] and rank_groups_chow[rank3] then
-                                local card1 = table.remove(rank_groups_chow[rank1])
-                                local card2 = table.remove(rank_groups_chow[rank2])
-                                local card3 = table.remove(rank_groups_chow[rank3])
-
-                                local new_hand = {}
-                                local used = {}
-                                used[card1.hand_index] = true
-                                used[card2.hand_index] = true
-                                used[card3.hand_index] = true
-
-                                for i = 1, #hand do
-                                    if not used[i] then
-                                        table.insert(new_hand, hand[i])
-                                    end
-                                end
-
-                                local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
-                                if rest_groups then
-                                    local chow = {card1.card, card2.card, card3.card}
-                                    table.insert(rest_groups, 1, chow)
-                                    return rest_groups
-                                end
-
-                                table.insert(rank_groups_chow[rank1], card1)
-                                table.insert(rank_groups_chow[rank2], card2)
-                                table.insert(rank_groups_chow[rank3], card3)
-                            end
-                        end
-                    end
-                end
-            end
-
-            return nil
-        end
-
-        local get_chows
-        get_chows = function(hand)
-            local chow_patterns = {}
-
-            for _, suit in ipairs(suits) do
-                local rank_counts = {}
-
-                for i = 1, #hand do
-                    if hand[i]:is_suit(suit, nil, true) then
-                        local rank = hand[i]:get_id()
-                        if not rank_counts[rank] then
-                            rank_counts[rank] = 0
-                        end
-                        rank_counts[rank] = rank_counts[rank] + 1
-                    end
-                end
-
-                local unique_ranks = {}
-                for rank, _ in pairs(rank_counts) do
-                    table.insert(unique_ranks, rank)
-                end
-                table.sort(unique_ranks)
-
-                for i = 1, #unique_ranks - 2 do
-                    local rank1 = unique_ranks[i]
-                    local rank2 = unique_ranks[i + 1]
-                    local rank3 = unique_ranks[i + 2]
-
-                    if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
-                        local chow_count = math.min(rank_counts[rank1], rank_counts[rank2], rank_counts[rank3])
-                        if chow_count > 0 then
-                            local pattern = suit .. "-" .. rank1 .. "-" .. rank2 .. "-" .. rank3
-                            chow_patterns[pattern] = chow_count
-                        end
-                    end
-                end
-            end
-
-            return chow_patterns
-        end
-
         local pure_double_chi_count
         pure_double_chi_count = function(hand)
             local chow_patterns = get_chows(hand)
@@ -190,9 +187,8 @@ SMODS.PokerHand {
 
         local outside_hand
         outside_hand = function(hand)
-            -- Try each potential pair
-            for j = 1, #suits do
-                local suit = suits[j]
+            for j = 1, #SUITS do
+                local suit = SUITS[j]
                 local rank_groups = {}
 
                 for i = 1, #hand do
@@ -218,7 +214,6 @@ SMODS.PokerHand {
 
                         local groups = validate_and_get_groups(remaining, 4)
                         if groups then
-                            -- Check if all groups have at least one terminal or honor
                             for g = 1, #groups do
                                 local group = groups[g]
                                 local has_terminal_or_honor = false
@@ -300,131 +295,8 @@ SMODS.PokerHandPart {
             return {}
         end
 
-        local suits = {"Spades", "Hearts", "Clubs", "Diamonds", "bm_Winds", "bm_Dragons"}
-
-        local validate_and_get_groups
-        validate_and_get_groups = function(hand, num_groups)
-            if num_groups == 0 then
-                return #hand == 0 and {} or nil
-            end
-            if #hand < 3 then
-                return nil
-            end
-
-            -- Try to form groups from each suit
-            for j = 1, #suits do
-                local suit = suits[j]
-                local suit_cards = {}
-                local suit_indices = {}
-
-                for i = 1, #hand do
-                    if hand[i]:is_suit(suit, nil, true) then
-                        table.insert(suit_cards, hand[i])
-                        table.insert(suit_indices, i)
-                    end
-                end
-
-                if #suit_cards >= 3 then
-                    -- Try to form a triplet (3 of same rank)
-                    local rank_groups = {}
-                    for i = 1, #suit_cards do
-                        local rank = suit_cards[i]:get_id()
-                        if not rank_groups[rank] then
-                            rank_groups[rank] = {}
-                        end
-                        table.insert(rank_groups[rank], i)
-                    end
-
-                    for rank, indices in pairs(rank_groups) do
-                        if #indices >= 3 then
-                            local new_hand = {}
-                            local used = {}
-                            for k = 1, 3 do
-                                used[suit_indices[indices[k]]] = true
-                            end
-                            for i = 1, #hand do
-                                if not used[i] then
-                                    table.insert(new_hand, hand[i])
-                                end
-                            end
-
-                            local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
-                            if rest_groups then
-                                local triplet = {suit_cards[indices[1]], suit_cards[indices[2]], suit_cards[indices[3]]}
-                                table.insert(rest_groups, 1, triplet)
-                                return rest_groups
-                            end
-                        end
-                    end
-
-                    -- Try to form a chow (consecutive 3 of same suit)
-                    -- Group cards by rank for more flexible chow selection
-                    local rank_groups_chow = {}
-                    for i = 1, #suit_cards do
-                        local rank = suit_cards[i]:get_id()
-                        if not rank_groups_chow[rank] then
-                            rank_groups_chow[rank] = {}
-                        end
-                        table.insert(rank_groups_chow[rank], {
-                            card = suit_cards[i],
-                            hand_index = suit_indices[i]
-                        })
-                    end
-
-                    -- Try to form chows with any available consecutive ranks
-                    local sorted_ranks = {}
-                    for rank, _ in pairs(rank_groups_chow) do
-                        table.insert(sorted_ranks, rank)
-                    end
-                    table.sort(sorted_ranks)
-
-                    for k = 1, #sorted_ranks - 2 do
-                        local rank1 = sorted_ranks[k]
-                        local rank2 = sorted_ranks[k + 1]
-                        local rank3 = sorted_ranks[k + 2]
-
-                        if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
-                            if rank_groups_chow[rank1] and rank_groups_chow[rank2] and rank_groups_chow[rank3] then
-                                -- Found a valid chow pattern, take one card from each rank
-                                local card1 = table.remove(rank_groups_chow[rank1])
-                                local card2 = table.remove(rank_groups_chow[rank2])
-                                local card3 = table.remove(rank_groups_chow[rank3])
-
-                                local new_hand = {}
-                                local used = {}
-                                used[card1.hand_index] = true
-                                used[card2.hand_index] = true
-                                used[card3.hand_index] = true
-
-                                for i = 1, #hand do
-                                    if not used[i] then
-                                        table.insert(new_hand, hand[i])
-                                    end
-                                end
-
-                                local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
-                                if rest_groups then
-                                    local chow = {card1.card, card2.card, card3.card}
-                                    table.insert(rest_groups, 1, chow)
-                                    return rest_groups
-                                end
-
-                                -- Restore cards if this path didn't work
-                                table.insert(rank_groups_chow[rank1], card1)
-                                table.insert(rank_groups_chow[rank2], card2)
-                                table.insert(rank_groups_chow[rank3], card3)
-                            end
-                        end
-                    end
-                end
-            end
-
-            return nil
-        end
-
-        -- Try each potential pair
-        for j = 1, #suits do
-            local suit = suits[j]
+        for j = 1, #SUITS do
+            local suit = SUITS[j]
             local rank_groups = {}
 
             for i = 1, #hand do
@@ -437,20 +309,17 @@ SMODS.PokerHandPart {
                 end
             end
 
-            -- Try each pair (2 or more cards of same rank and suit, use 2 as pair)
             for rank, cards in pairs(rank_groups) do
                 if #cards >= 2 then
                     local pair = {cards[1], cards[2]}
                     local remaining = {}
 
-                    -- Create remaining hand without the pair
                     for i = 1, #hand do
                         if hand[i] ~= pair[1] and hand[i] ~= pair[2] then
                             table.insert(remaining, hand[i])
                         end
                     end
 
-                    -- Try to validate remaining 12 cards as 4 groups
                     local groups = validate_and_get_groups(remaining, 4)
                     if groups then
                         local ret = {pair}
@@ -466,61 +335,6 @@ SMODS.PokerHandPart {
         return {}
     end
 }
-
---[[SMODS.PokerHandPart {
-    key = "chow",
-    func = function(hand)
-        local ret = {}
-        if #hand < 3 then
-            return ret
-        end
-        
-        local suits = {
-            "Spades",
-            "Hearts",
-            "Clubs",
-            "Diamonds",
-            "bm_Winds",
-            "bm_Dragons"
-        }
-        
-        for j = 1, #suits do
-            local suit = suits[j]
-            local suit_cards = {}
-            
-            for i = 1, #hand do
-                if hand[i]:is_suit(suit, nil, true) then
-                    table.insert(suit_cards, hand[i])
-                end
-            end
-            
-            if #suit_cards >= 3 then
-                local sorted = {}
-                for i = 1, #suit_cards do
-                    table.insert(sorted, {
-                        card = suit_cards[i],
-                        id = suit_cards[i]:get_id()
-                    })
-                end
-                table.sort(sorted, function(a, b)
-                    return a.id < b.id
-                end)
-                
-                local i = 1
-                while i <= #sorted - 2 do
-                    if sorted[i].id + 1 == sorted[i + 1].id and sorted[i + 1].id + 1 == sorted[i + 2].id then
-                        table.insert(ret, {sorted[i].card, sorted[i + 1].card, sorted[i + 2].card})
-                        i = i + 3
-                    else
-                        i = i + 1
-                    end
-                end
-            end
-        end
-        
-        return ret
-    end
-} --]]
 
 SMODS.PokerHandPart {
     key = "unique_flush_2",
@@ -552,39 +366,3 @@ SMODS.PokerHandPart {
         return ret
     end
 }
---[[
-SMODS.PokerHandPart {
-    key = "unique_flush_3",
-    func = function(hand)
-        local ret = {}
-        local suits = {
-            "Spades",
-            "Hearts",
-            "Clubs",
-            "Diamonds"
-        }
-        
-        for j = 1, #suits do
-            local suit = suits[j]
-            local rank_groups = {}
-            
-            for i = 1, #hand do
-                if hand[i]:is_suit(suit, nil, true) then
-                    local rank = hand[i]:get_id()
-                    if not rank_groups[rank] then
-                        rank_groups[rank] = {}
-                    end
-                    table.insert(rank_groups[rank], hand[i])
-                end
-            end
-            
-            for rank, cards in pairs(rank_groups) do
-                if #cards == 3 then
-                    table.insert(ret, {cards[1], cards[2], cards[3]})
-                end
-            end
-        end
-        
-        return ret
-    end
-}--]]
