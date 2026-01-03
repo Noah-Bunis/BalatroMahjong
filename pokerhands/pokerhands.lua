@@ -82,10 +82,11 @@ local function validate_and_get_groups(hand, num_groups)
                         local card3 = table.remove(rank_groups_chow[rank3])
 
                         local new_hand = {}
-                        local used = {}
-                        used[card1.hand_index] = true
-                        used[card2.hand_index] = true
-                        used[card3.hand_index] = true
+                        local used = {
+                            [card1.hand_index] = true,
+                            [card2.hand_index] = true,
+                            [card3.hand_index] = true
+                        }
 
                         for i = 1, #hand do
                             if not used[i] then
@@ -95,11 +96,9 @@ local function validate_and_get_groups(hand, num_groups)
 
                         local rest_groups = validate_and_get_groups(new_hand, num_groups - 1)
                         if rest_groups then
-                            local chow = {card1.card, card2.card, card3.card}
-                            table.insert(rest_groups, 1, chow)
+                            table.insert(rest_groups, 1, {card1.card, card2.card, card3.card})
                             return rest_groups
                         end
-
                         table.insert(rank_groups_chow[rank1], card1)
                         table.insert(rank_groups_chow[rank2], card2)
                         table.insert(rank_groups_chow[rank3], card3)
