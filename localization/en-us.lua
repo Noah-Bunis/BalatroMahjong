@@ -146,6 +146,10 @@ return {
             ["bm_Pure Double Chi"] = {"Two identical Chows in the same suit."},
             ["bm_Twice Pure Double Chi"] = {"Two sets of Pure Double Chi in the same suit."},
             ["bm_Outside Hand"] = {"A Mahjong hand where all sets contain at least one terminal (King or Ace) or Honor."},
+            ["bm_Pure Straight"] = {"A Mahjong hand that contains a sequence from 2 to 10 in the same suit."},
+            ["bm_Half Flush"] = {"A Mahjong hand that contains tiles from one suit and honor tiles."},
+            ["bm_Full Flush"] = {"A Mahjong hand that contains tiles from only one suit."},
+            ["bm_Thirteen Orphans"] = {"A Mahjong hand consisting of one of each honor tile and terminal"},
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
@@ -156,6 +160,10 @@ return {
             ["bm_Pure Double Chi"] = "Pure Double Chi",
             ["bm_Twice Pure Double Chi"] = "Twice Pure Double Chi",
             ["bm_Outside Hand"] = "Outside Hand",
+            ["bm_Pure Straight"] = "Pure Straight",
+            ["bm_Half Flush"] = "Half Flush",
+            ["bm_Full Flush"] = "Full Flush",
+            ["bm_Thirteen Orphans"] = "Thirteen Orphans",
         },
         ranks = {
             bm_North = "North",

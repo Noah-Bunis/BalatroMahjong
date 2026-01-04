@@ -170,6 +170,48 @@ SMODS.PokerHand {
         local honroutou = true -- all honors or terminals
         local chinroutou = true -- all terminals
 
+        local pure_straight
+        pure_straight = function(hand)
+            for j = 1, #SUITS do
+                local suit = SUITS[j]
+                local bools = {false,false,false,false,false,false,false,false,false}
+                for i = 1, #hand do
+                    if hand[i]:is_suit(suit, nil, true) then
+                        local rank = SMODS.Ranks[hand[i].base.value]
+                        if rank.key == "2" then
+                            bools[0] = true
+                        elseif rank.key == "3" then
+                            bools[1] = true
+                        elseif rank.key == "4" then
+                            bools[2] = true
+                        elseif rank.key == "5" then
+                            bools[3] = true
+                        elseif rank.key == "6" then
+                            bools[4] = true
+                        elseif rank.key == "7" then
+                            bools[5] = true
+                        elseif rank.key == "8" then
+                            bools[6] = true
+                        elseif rank.key == "9" then
+                            bools[7] = true
+                        elseif rank.key == "10" then
+                            bools[8] = true
+                        end
+                    end
+                end
+                local count = 0
+                for j = 0, 8 do
+                    if bools[j] then
+                        count = count + 1
+                    end
+                end
+                if count == 9 then
+                    return true
+                end
+            end
+            return false
+        end
+
         local pure_double_chi_count
         pure_double_chi_count = function(hand)
             local chow_patterns = get_chows(hand)
@@ -239,6 +281,54 @@ SMODS.PokerHand {
             return false
         end
 
+        local half_flush
+        half_flush = function(hand)
+            if not pure_straight(hand) then
+                return false
+            end
+            -- ensure all cards are of one suit plus honors
+            for j = 1, #SUITS do
+                local suit = SUITS[j]
+                local has_suit = false
+                local all_valid = true
+                for i = 1, #hand do
+                    if hand[i]:is_suit(suit, nil, true) then
+                        has_suit = true
+                    else
+                        local rank = SMODS.Ranks[hand[i].base.value]
+                        if not rank.bm_honor then
+                            all_valid = false
+                            break
+                        end
+                    end
+                end
+                if has_suit and all_valid then
+                    return true
+                end
+            end
+        end
+
+        local full_flush
+        full_flush = function(hand)
+            if not pure_straight(hand) then
+                return false
+            end
+            -- ensure all cards are of one suit
+            for j = 1, #SUITS do
+                local suit = SUITS[j]
+                local all_valid = true
+                for i = 1, #hand do
+                    if not hand[i]:is_suit(suit, nil, true) then
+                        all_valid = false
+                        break
+                    end
+                end
+                if all_valid then
+                    return true
+                end
+            end
+        end
+
         for j = 1, #scoring_hand do
             local rank = SMODS.Ranks[scoring_hand[j].base.value]
             local honor = rank.bm_honor
@@ -254,10 +344,16 @@ SMODS.PokerHand {
         end
         if chinroutou then
             return "bm_Chinroutou"
+        elseif full_flush(scoring_hand) then
+            return "bm_Full Flush"
         elseif pure_double_chi_count(scoring_hand) > 1 then
             return "bm_Twice Pure Double Chi"
+        elseif half_flush(scoring_hand) then
+            return "bm_Half Flush"
         elseif honroutou then
             return "bm_Honroutou"
+        elseif pure_straight(scoring_hand) then
+            return "bm_Pure Straight"
         elseif outside_hand(scoring_hand) then
             return "bm_Outside Hand"
         elseif pure_double_chi_count(scoring_hand) > 0 then
@@ -282,6 +378,48 @@ SMODS.PokerHand {
         end
         if not (#parts.bm_unique_flush_2 > 6) then
             return {}
+        end
+        return {hand}
+    end
+}
+
+SMODS.PokerHand{
+    key = "Thirteen Orphans",
+    mult = 26,
+    chips = 260,
+    l_mult = 13,
+    l_chips = 130,
+    example = {{'S_A', true}, {'C_A', true},  {'H_A', true}, {'S_K', true}, {'C_K', true}, {'D_K', true}, {'H_K', true},
+            {'bm_Wi_bm_E', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_N', true}, {'bm_D_bm_R', true}, {'bm_D_bm_G', true}, {'bm_D_bm_Wh', true}},
+    evaluate = function(parts, hand)
+        -- Win with all terminals and each type of honor
+        local required_honors = {
+            ['bm_East'] = false, ['bm_South'] = false, ['bm_West'] = false, ['bm_North'] = false,
+            ['bm_Red'] = false, ['bm_Green'] = false, ['bm_White'] = false
+        }
+        if #hand ~= 14 then
+            return {}
+        end
+        if #parts.bm_unique_flush_2 > 0 then
+            return {}
+        end
+        for i = 1, #hand do
+            local card = hand[i]
+            local rank = SMODS.Ranks[card.base.value]
+            if rank.key == 'Ace' or rank.key == 'King' then
+                -- valid terminal
+            elseif rank.bm_honor then
+                if required_honors[rank.key] ~= nil then
+                    required_honors[rank.key] = true
+                end
+            else
+                return {}
+            end
+        end
+        for _, found in pairs(required_honors) do
+            if not found then
+                return {}
+            end
         end
         return {hand}
     end
