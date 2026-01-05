@@ -174,46 +174,11 @@ local function get_chows(hand)
     return chow_patterns
 end
 
---[[ SMODS.PokerHand {
-    key = "Mahjong",
-    mult = 20,
-    chips = 200,
-    l_mult = 6,
-    l_chips = 60,
-    example = {{'S_A', true}, {'S_A', true}, {'S_2', true}, {'S_3', true}, {'S_4', true}, {'C_5', true}, {'C_6', true},
-               {'C_7', true}, {'D_9', true}, {'D_T', true}, {'D_J', true}, {'H_5', true}, {'H_5', true}, {'H_5', true}},
-    evaluate = function(parts, hand)
-        if not (#parts.bm_mahjong > 0) then
-            return {}
-        end
-        return {}
-    end,
-    modify_display_text = function(self, cards, scoring_hand)
+--[[ 
         local tanyao = true -- no honors or teminals
         local honroutou = true -- all honors or terminals
         local chinroutou = true -- all terminals
         local tsuuiisou = true -- all honors
-
-        local full_flush
-        full_flush = function(hand)
-            if not pure_straight(hand) then
-                return false
-            end
-            -- ensure all cards are of one suit
-            for j = 1, #SUITS do
-                local suit = SUITS[j]
-                local all_valid = true
-                for i = 1, #hand do
-                    if not hand[i]:is_suit(suit, nil, true) then
-                        all_valid = false
-                        break
-                    end
-                end
-                if all_valid then
-                    return true
-                end
-            end
-        end
 
         local nine_gates
         nine_gates = function(hand)
@@ -294,8 +259,7 @@ end
             return "bm_Tsuiiisou"
         elseif full_flush(scoring_hand) then
             return "bm_Full Flush"
-    end
-} --]]
+--]]
 
 -- One Han
 
@@ -585,8 +549,7 @@ SMODS.PokerHand {
     l_mult = 6,
     l_chips = 60,
     example = {{'S_A', true}, {'S_2', true}, {'S_3', true}, {'C_J', true}, {'C_Q', true}, {'C_K', true}, {'D_A', true},
-               {'D_2', true}, {'D_3', true}, {'H_K', true}, {'H_Q', true}, {'H_A', true}, {'H_A', true},
-               {'H_A', true}},
+               {'D_2', true}, {'D_3', true}, {'H_K', true}, {'H_Q', true}, {'H_A', true}, {'H_A', true}, {'H_A', true}},
     evaluate = function(parts, hand)
         if not (#parts.bm_mahjong > 0) then
             return {}
@@ -637,7 +600,37 @@ SMODS.PokerHand {
         end
         return {}
     end
-    
+}
+
+-- Six Han
+
+SMODS.PokerHand {
+    key = "Full Flush",
+    mult = 30,
+    chips = 300,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'H_A', true}, {'H_2', true}, {'H_3', true}, {'H_4', true}, {'H_5', true}, {'H_6', true}, {'H_7', true},
+               {'H_8', true}, {'H_9', true}, {'H_Q', true}, {'H_Q', true}, {'H_Q', true}, {'H_K', true}, {'H_K', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #SUITS do
+            local suit = SUITS[j]
+            local all_valid = true
+            for i = 1, #hand do
+                if not hand[i]:is_suit(suit, nil, true) then
+                    all_valid = false
+                    break
+                end
+            end
+            if all_valid then
+                return {hand}
+            end
+        end
+        return {}
+    end
 }
 
 SMODS.PokerHand {
