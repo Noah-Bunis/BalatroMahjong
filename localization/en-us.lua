@@ -179,6 +179,7 @@ return {
             ["bm_Tsuiiisou"] = {"A Mahjong hand that contains only honor tiles."},
             ["bm_Little Four Winds"] = {"A Mahjong hand that contains Pungs or Kongs of three Winds and a Pair of the fourth Wind."},
             ["bm_Big Four Winds"] = {"A Mahjong hand that contains Pungs or Kongs of all four Winds."},
+            ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (King or Ace)."}
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
@@ -196,6 +197,7 @@ return {
             ["bm_Tsuiiisou"] = "All Honors",
             ["bm_Little Four Winds"] = "Little Four Winds",
             ["bm_Big Four Winds"] = "Big Four Winds",
+            ["bm_Junchan"] = "Terminal in Each Group",
         },
         ranks = {
             bm_North = "North",

@@ -194,33 +194,6 @@ end
         local chinroutou = true -- all terminals
         local tsuuiisou = true -- all honors
 
-        local half_flush
-        half_flush = function(hand)
-            if not pure_straight(hand) then
-                return false
-            end
-            -- ensure all cards are of one suit plus honors
-            for j = 1, #SUITS do
-                local suit = SUITS[j]
-                local has_suit = false
-                local all_valid = true
-                for i = 1, #hand do
-                    if hand[i]:is_suit(suit, nil, true) then
-                        has_suit = true
-                    else
-                        local rank = SMODS.Ranks[hand[i].base.value]
-                        if not rank.bm_honor then
-                            all_valid = false
-                            break
-                        end
-                    end
-                end
-                if has_suit and all_valid then
-                    return true
-                end
-            end
-        end
-
         local full_flush
         full_flush = function(hand)
             if not pure_straight(hand) then
@@ -321,17 +294,10 @@ end
             return "bm_Tsuiiisou"
         elseif full_flush(scoring_hand) then
             return "bm_Full Flush"
-        elseif pure_double_chi_count(scoring_hand) > 1 then
-            return "bm_Twice Pure Double Chi"
-        elseif half_flush(scoring_hand) then
-            return "bm_Half Flush"
-        elseif honroutou then
-            return "bm_Honroutou"
-        elseif outside_hand(scoring_hand) then
-            return "bm_Outside Hand"
-        end
     end
 } --]]
+
+-- One Han
 
 SMODS.PokerHand {
     key = "Tanyao",
@@ -384,6 +350,8 @@ SMODS.PokerHand {
         return {hand}
     end
 }
+
+-- Two Han
 
 SMODS.PokerHand {
     key = "Seven Pairs",
@@ -494,6 +462,7 @@ SMODS.PokerHand {
                     end
                     local groups = validate_and_get_groups(remaining, 4)
                     if groups then
+                        table.insert(groups, pair)
                         for g = 1, #groups do
                             local group = groups[g]
                             local has_terminal_or_honor = false
@@ -538,9 +507,137 @@ SMODS.PokerHand {
             if not (rank.key == "Ace" or rank.key == "King" or honor) then
                 return {}
             end
-            return {hand}
         end
+        return {hand}
     end
+}
+
+-- Three Han
+
+SMODS.PokerHand {
+    key = "Twice Pure Double Chi",
+    mult = 28,
+    chips = 280,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'S_2', true}, {'S_3', true}, {'S_4', true}, {'S_2', true}, {'S_3', true}, {'S_4', true}, {'C_5', true},
+               {'C_6', true}, {'C_7', true}, {'C_5', true}, {'C_6', true}, {'C_7', true}, {'bm_Wi_bm_We', true},
+               {'bm_Wi_bm_We', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        local chow_patterns = get_chows(hand)
+        local total_pairs = 0
+        for pattern, chow_count in pairs(chow_patterns) do
+            if chow_count >= 2 then
+                total_pairs = total_pairs + math.floor(chow_count / 2)
+            end
+        end
+        if total_pairs ~= 2 then
+            return {}
+        end
+        return {hand}
+    end
+}
+
+SMODS.PokerHand {
+    key = "Half Flush",
+    mult = 28,
+    chips = 280,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'H_A', true}, {'H_2', true}, {'H_3', true}, {'H_4', true}, {'H_5', true}, {'H_6', true}, {'H_7', true},
+               {'H_8', true}, {'H_9', true}, {'bm_D_bm_G', true}, {'bm_D_bm_G', true}, {'bm_D_bm_G', true},
+               {'bm_Wi_bm_S', true}, {'bm_Wi_bm_S', true}},
+    evaluate = function(parts, hand)
+        -- ensure all cards are of one suit plus honors
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #SUITS do
+            local suit = SUITS[j]
+            local has_suit = false
+            local all_valid = true
+            for i = 1, #hand do
+                if hand[i]:is_suit(suit, nil, true) then
+                    has_suit = true
+                else
+                    local rank = SMODS.Ranks[hand[i].base.value]
+                    if not rank.bm_honor then
+                        all_valid = false
+                        break
+                    end
+                end
+            end
+            if has_suit and all_valid then
+                return {hand}
+            end
+        end
+        return {}
+    end
+}
+
+SMODS.PokerHand {
+    key = "Junchan", -- Terminal in each group
+    mult = 28,
+    chips = 280,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'S_A', true}, {'S_2', true}, {'S_3', true}, {'C_J', true}, {'C_Q', true}, {'C_K', true}, {'D_A', true},
+               {'D_2', true}, {'D_3', true}, {'H_K', true}, {'H_Q', true}, {'H_A', true}, {'H_A', true},
+               {'H_A', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #SUITS do
+            local suit = SUITS[j]
+            local rank_groups = {}
+            for i = 1, #hand do
+                if hand[i]:is_suit(suit, nil, true) then
+                    local rank = hand[i]:get_id()
+                    if not rank_groups[rank] then
+                        rank_groups[rank] = {}
+                    end
+                    table.insert(rank_groups[rank], hand[i])
+                end
+            end
+            for rank, cards in pairs(rank_groups) do
+                if #cards >= 2 then
+                    local pair = {cards[1], cards[2]}
+                    local remaining = {}
+                    for i = 1, #hand do
+                        if hand[i] ~= pair[1] and hand[i] ~= pair[2] then
+                            table.insert(remaining, hand[i])
+                        end
+                    end
+                    local groups = validate_and_get_groups(remaining, 4)
+                    if groups then
+                        table.insert(groups, pair)
+                        for g = 1, #groups do
+                            local group = groups[g]
+                            local has_terminal = false
+                            for c = 1, #group do
+                                local card = group[c]
+                                local card_rank = SMODS.Ranks[card.base.value]
+                                if card_rank.key == "Ace" or card_rank.key == "King" then
+                                    has_terminal = true
+                                    break
+                                end
+                            end
+                            if not has_terminal then
+                                return {}
+                            end
+                        end
+                        return {hand}
+                    end
+                end
+            end
+        end
+        return {}
+    end
+    
 }
 
 SMODS.PokerHand {
