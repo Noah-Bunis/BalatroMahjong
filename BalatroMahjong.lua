@@ -31,3 +31,9 @@ local suits_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "suits")
 for _, file in ipairs(suits_src) do
     assert(SMODS.load_file("suits/" .. file))()
 end
+
+-- Round Evaluation
+local round_eval_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "round_eval")
+for _, file in ipairs(round_eval_src) do
+    assert(SMODS.load_file("round_eval/" .. file))()
+end
