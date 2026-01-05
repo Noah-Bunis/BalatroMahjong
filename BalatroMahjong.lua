@@ -37,3 +37,10 @@ local round_eval_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "round_ev
 for _, file in ipairs(round_eval_src) do
     assert(SMODS.load_file("round_eval/" .. file))()
 end
+
+-- Tags
+local tags_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "tags")
+for _, file in ipairs(tags_src) do
+    assert(SMODS.load_file("tags/" .. file))()
+end
+

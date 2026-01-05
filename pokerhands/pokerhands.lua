@@ -229,7 +229,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Pure Double Chi",
+    key = "PureDoubleChi",
     mult = 20,
     chips = 200,
     l_mult = 6,
@@ -258,7 +258,7 @@ SMODS.PokerHand {
 -- Two Han
 
 SMODS.PokerHand {
-    key = "Seven Pairs",
+    key = "SevenPairs",
     mult = 24,
     chips = 240,
     l_mult = 6,
@@ -277,7 +277,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Pure Straight",
+    key = "PureStraight",
     mult = 24,
     chips = 240,
     l_mult = 6,
@@ -331,7 +331,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Outside Hand",
+    key = "OutsideHand",
     mult = 24,
     chips = 240,
     l_mult = 6,
@@ -419,7 +419,7 @@ SMODS.PokerHand {
 -- Three Han
 
 SMODS.PokerHand {
-    key = "Twice Pure Double Chi",
+    key = "TwicePureDoubleChi",
     mult = 28,
     chips = 280,
     l_mult = 6,
@@ -446,7 +446,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Half Flush",
+    key = "HalfFlush",
     mult = 28,
     chips = 280,
     l_mult = 6,
@@ -545,7 +545,7 @@ SMODS.PokerHand {
 -- Six Han
 
 SMODS.PokerHand {
-    key = "Full Flush",
+    key = "FullFlush",
     mult = 30,
     chips = 300,
     l_mult = 6,
@@ -623,7 +623,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Little Four Winds",
+    key = "LittleFourWinds",
     mult = 32,
     chips = 320,
     l_mult = 10,
@@ -666,7 +666,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Big Four Winds",
+    key = "BigFourWinds",
     mult = 32,
     chips = 320,
     l_mult = 10,
@@ -706,7 +706,7 @@ SMODS.PokerHand {
 }
 
 SMODS.PokerHand {
-    key = "Thirteen Orphans",
+    key = "ThirteenOrphans",
     mult = 32,
     chips = 320,
     l_mult = 10,
