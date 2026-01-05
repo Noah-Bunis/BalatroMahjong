@@ -4,9 +4,35 @@ return {
             b_bm_mahjong_red = {
                 name = "Mahjong Red Deck",
                 text = {
-                    "Standard Mahjong deck,",
+                    "{C:attention}Standard Mahjong Deck{}",
                     "{C:red}+#1#{} discard",
                     "every round",
+                },
+            },
+            b_bm_mahjong_blue = {
+                name = "Mahjong Blue Deck",
+                text = {
+                    "{C:attention}Standard Mahjong Deck{}",
+                    "{C:blue}+#1#{} hand",
+                    "every round",
+                },
+            },
+            b_bm_mahjong_yellow = {
+                name = "Mahjong Yellow Deck",
+                text = {
+                    "{C:attention}Standard Mahjong Deck{}",
+                    "Start with",
+                    "extra {C:money}$#1#",
+                },
+            },
+            b_bm_mahjong_green = {
+                name = "Mahjong Green Deck",
+                text = {
+                    "{C:attention}Standard Mahjong Deck{}",
+                    "At end of each Round:",
+                    "{C:money}$#1#{s:0.85} per remaining {C:blue}Hand",
+                    "{C:money}$#2#{s:0.85} per remaining {C:red}Discard",
+                    "Earn no {C:attention}Interest",
                 },
             },
         },
