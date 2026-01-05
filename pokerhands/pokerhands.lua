@@ -169,6 +169,7 @@ SMODS.PokerHand {
         local tanyao = true -- no honors or teminals
         local honroutou = true -- all honors or terminals
         local chinroutou = true -- all terminals
+        local tsuuiisou = true -- all honors
 
         local pure_straight
         pure_straight = function(hand)
@@ -329,21 +330,82 @@ SMODS.PokerHand {
             end
         end
 
+        local nine_gates
+        nine_gates = function(hand)
+            if not full_flush(hand) and pure_straight(hand) then
+                return false
+            end
+            local ace_count = 0
+            local ten_count = 0
+            for i = 1, #hand do
+                local rank = SMODS.Ranks[hand[i].base.value]
+                if rank.key == "Ace" then
+                    ace_count = ace_count + 1
+                elseif rank.key == "10" then
+                    ten_count = ten_count + 1
+                end
+            end
+            return ace_count >= 3 and ten_count >= 3
+        end
+
         for j = 1, #scoring_hand do
             local rank = SMODS.Ranks[scoring_hand[j].base.value]
             local honor = rank.bm_honor
             if rank.key == "Ace" or rank.key == "King" then
                 tanyao = false
+                tsuuiisou = false
             elseif honor then
                 chinroutou = false
                 tanyao = false
             else
                 honroutou = false
                 chinroutou = false
+                tsuuiisou = false
             end
         end
-        if chinroutou then
+
+        local four_winds
+        function four_winds(hand)
+            local wind_counts = {
+                ['bm_East'] = 0,
+                ['bm_South'] = 0,
+                ['bm_West'] = 0,
+                ['bm_North'] = 0
+            }
+            for j = 1, #hand do
+                local rank = SMODS.Ranks[hand[j].base.value]
+                if wind_counts[rank.key] ~= nil then
+                    wind_counts[rank.key] = wind_counts[rank.key] + 1
+                end
+            end
+            local completed_winds = 0
+            local pair_winds = 0
+            for _, count in pairs(wind_counts) do
+                if count == 3 then
+                    completed_winds = completed_winds + 1
+                elseif count == 2 then
+                    pair_winds = pair_winds + 1
+                end
+            end
+            if completed_winds == 4 then
+                return 2
+            elseif completed_winds == 3 and pair_winds == 1 then
+                return 1
+            else return 0
+            end
+        end
+
+        -- Return Mahjong Yaku
+        if nine_gates(scoring_hand) then
+            return "bm_Nine Gates"
+        elseif four_winds(scoring_hand) == 2 then
+            return "bm_Big Four Winds"
+        elseif four_winds(scoring_hand) == 1 then
+            return "bm_Little Four Winds"
+        elseif chinroutou then
             return "bm_Chinroutou"
+        elseif tsuuiisou then 
+            return "bm_Tsuiiisou"
         elseif full_flush(scoring_hand) then
             return "bm_Full Flush"
         elseif pure_double_chi_count(scoring_hand) > 1 then
