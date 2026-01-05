@@ -253,12 +253,6 @@ end
             return "bm_Big Four Winds"
         elseif four_winds(scoring_hand) == 1 then
             return "bm_Little Four Winds"
-        elseif chinroutou then
-            return "bm_Chinroutou"
-        elseif tsuuiisou then
-            return "bm_Tsuiiisou"
-        elseif full_flush(scoring_hand) then
-            return "bm_Full Flush"
 --]]
 
 -- One Han
@@ -633,12 +627,61 @@ SMODS.PokerHand {
     end
 }
 
+-- Yakuman
+
+SMODS.PokerHand {
+    key = "Tsuiisou", -- All Honors
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
+    example = {{'bm_D_bm_R', true}, {'bm_D_bm_R', true}, {'bm_D_bm_R', true}, {'bm_D_bm_G', true}, {'bm_D_bm_G', true},
+               {'bm_D_bm_G', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_S', true},
+               {'bm_Wi_bm_We', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_N', true},
+               {'bm_Wi_bm_N', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #hand do
+            local rank = SMODS.Ranks[hand[j].base.value]
+            local honor = rank.bm_honor
+            if not honor then
+                return {}
+            end
+        end
+        return {hand}
+    end
+}
+
+SMODS.PokerHand {
+    key = "Chinroutou", -- All Terminals
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
+    example = {{'H_A', true}, {'H_A', true}, {'H_A', true}, {'S_A', true}, {'S_A', true}, {'S_A', true}, {'C_K', true},
+               {'C_K', true}, {'C_K', true}, {'D_K', true}, {'D_K', true}, {'D_K', true}, {'C_A', true}, {'C_A', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #hand do
+            local rank = SMODS.Ranks[hand[j].base.value]
+            if not (rank.key == "Ace" or rank.key == "King") then
+                return {}
+            end
+        end
+        return {hand}
+    end
+}
+
 SMODS.PokerHand {
     key = "Thirteen Orphans",
-    mult = 26,
-    chips = 260,
-    l_mult = 13,
-    l_chips = 130,
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
     example = {{'S_A', true}, {'C_A', true}, {'H_A', true}, {'S_K', true}, {'C_K', true}, {'D_K', true}, {'H_K', true},
                {'bm_Wi_bm_E', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_N', true},
                {'bm_D_bm_R', true}, {'bm_D_bm_G', true}, {'bm_D_bm_Wh', true}},

@@ -171,15 +171,15 @@ return {
             ["bm_Seven Pairs"] = {"Seven unique Pairs."},
             ["bm_Pure Double Chi"] = {"Two identical Chows in the same suit."},
             ["bm_Twice Pure Double Chi"] = {"Two sets of Pure Double Chi in the same suit."},
-            ["bm_Outside Hand"] = {"A Mahjong hand where all sets contain at least one terminal (King or Ace) or Honor."},
+            ["bm_Outside Hand"] = {"A Mahjong hand where all sets contain at least one terminal (Kings or Aces) or Honor."},
             ["bm_Pure Straight"] = {"A Mahjong hand that contains a sequence from 2 to 10 in the same suit."},
             ["bm_Half Flush"] = {"A Mahjong hand that contains tiles from one suit and honor tiles."},
             ["bm_Full Flush"] = {"A Mahjong hand that contains tiles from only one suit."},
             ["bm_Thirteen Orphans"] = {"A Mahjong hand consisting of one of each honor tile and terminal"},
-            ["bm_Tsuiiisou"] = {"A Mahjong hand that contains only honor tiles."},
+            ["bm_Tsuiisou"] = {"A Mahjong hand that contains only honor tiles."},
             ["bm_Little Four Winds"] = {"A Mahjong hand that contains Pungs or Kongs of three Winds and a Pair of the fourth Wind."},
             ["bm_Big Four Winds"] = {"A Mahjong hand that contains Pungs or Kongs of all four Winds."},
-            ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (King or Ace)."}
+            ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (Kings or Aces)."}
         },
         poker_hands = {
             ["bm_Mahjong"] = "Mahjong",
@@ -194,7 +194,7 @@ return {
             ["bm_Half Flush"] = "Half Flush",
             ["bm_Full Flush"] = "Full Flush",
             ["bm_Thirteen Orphans"] = "Thirteen Orphans",
-            ["bm_Tsuiiisou"] = "All Honors",
+            ["bm_Tsuiisou"] = "All Honors",
             ["bm_Little Four Winds"] = "Little Four Winds",
             ["bm_Big Four Winds"] = "Big Four Winds",
             ["bm_Junchan"] = "Terminal in Each Group",
