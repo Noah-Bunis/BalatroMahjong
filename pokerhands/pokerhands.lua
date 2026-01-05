@@ -143,11 +143,13 @@ local function get_chows(hand)
         for i = 1, #hand do
             if hand[i]:is_suit(suit, nil, true) then
                 local rank = hand[i]:get_id()
-                if not rank_counts[rank] then
-                    rank_counts[rank] = 0
-                end
-                rank_counts[rank] = rank_counts[rank] + 1
+                rank_counts[rank] = (rank_counts[rank] or 0) + 1
             end
+        end
+
+        -- Ace can be low (A,2,3)
+        if rank_counts[14] then
+            rank_counts[1] = rank_counts[1] or rank_counts[14]
         end
 
         local unique_ranks = {}
@@ -157,14 +159,19 @@ local function get_chows(hand)
         table.sort(unique_ranks)
 
         for i = 1, #unique_ranks - 2 do
-            local rank1 = unique_ranks[i]
-            local rank2 = unique_ranks[i + 1]
-            local rank3 = unique_ranks[i + 2]
+            local r1 = unique_ranks[i]
+            local r2 = unique_ranks[i + 1]
+            local r3 = unique_ranks[i + 2]
 
-            if rank2 == rank1 + 1 and rank3 == rank2 + 1 then
-                local chow_count = math.min(rank_counts[rank1], rank_counts[rank2], rank_counts[rank3])
+            if r2 == r1 + 1 and r3 == r2 + 1 then
+                local c1 = (r1 == 1) and rank_counts[14] or rank_counts[r1]
+                local c2 = rank_counts[r2]
+                local c3 = rank_counts[r3]
+
+                local chow_count = math.min(c1 or 0, c2 or 0, c3 or 0)
                 if chow_count > 0 then
-                    local pattern = suit .. "-" .. rank1 .. "-" .. rank2 .. "-" .. rank3
+                    local display_r1 = (r1 == 1) and 14 or r1
+                    local pattern = suit .. "-" .. display_r1 .. "-" .. r2 .. "-" .. r3
                     chow_patterns[pattern] = chow_count
                 end
             end
@@ -175,11 +182,6 @@ local function get_chows(hand)
 end
 
 --[[ 
-        local tanyao = true -- no honors or teminals
-        local honroutou = true -- all honors or terminals
-        local chinroutou = true -- all terminals
-        local tsuuiisou = true -- all honors
-
         local nine_gates
         nine_gates = function(hand)
             if not full_flush(hand) and pure_straight(hand) then
@@ -197,62 +199,6 @@ end
             end
             return ace_count >= 3 and ten_count >= 3
         end
-
-        for j = 1, #scoring_hand do
-            local rank = SMODS.Ranks[scoring_hand[j].base.value]
-            local honor = rank.bm_honor
-            if rank.key == "Ace" or rank.key == "King" then
-                tanyao = false
-                tsuuiisou = false
-            elseif honor then
-                chinroutou = false
-                tanyao = false
-            else
-                honroutou = false
-                chinroutou = false
-                tsuuiisou = false
-            end
-        end
-
-        local four_winds
-        function four_winds(hand)
-            local wind_counts = {
-                ['bm_East'] = 0,
-                ['bm_South'] = 0,
-                ['bm_West'] = 0,
-                ['bm_North'] = 0
-            }
-            for j = 1, #hand do
-                local rank = SMODS.Ranks[hand[j].base.value]
-                if wind_counts[rank.key] ~= nil then
-                    wind_counts[rank.key] = wind_counts[rank.key] + 1
-                end
-            end
-            local completed_winds = 0
-            local pair_winds = 0
-            for _, count in pairs(wind_counts) do
-                if count == 3 then
-                    completed_winds = completed_winds + 1
-                elseif count == 2 then
-                    pair_winds = pair_winds + 1
-                end
-            end
-            if completed_winds == 4 then
-                return 2
-            elseif completed_winds == 3 and pair_winds == 1 then
-                return 1
-            else
-                return 0
-            end
-        end
-
-        -- Return Mahjong Yaku
-        if nine_gates(scoring_hand) then
-            return "bm_Nine Gates"
-        elseif four_winds(scoring_hand) == 2 then
-            return "bm_Big Four Winds"
-        elseif four_winds(scoring_hand) == 1 then
-            return "bm_Little Four Winds"
 --]]
 
 -- One Han
@@ -673,6 +619,89 @@ SMODS.PokerHand {
             end
         end
         return {hand}
+    end
+}
+
+SMODS.PokerHand {
+    key = "Little Four Winds",
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
+    example = {{'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'bm_Wi_bm_S', true},
+               {'bm_Wi_bm_S', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_We', true},
+               {'bm_Wi_bm_We', true}, {'C_3', true}, {'C_4', true}, {'C_5', true}, {'bm_Wi_bm_N', true},
+               {'bm_Wi_bm_N', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        local wind_counts = {
+            ['bm_East'] = 0,
+            ['bm_South'] = 0,
+            ['bm_West'] = 0,
+            ['bm_North'] = 0
+        }
+        for j = 1, #hand do
+            local rank = SMODS.Ranks[hand[j].base.value]
+            if wind_counts[rank.key] ~= nil then
+                wind_counts[rank.key] = wind_counts[rank.key] + 1
+            end
+        end
+        local completed_winds = 0
+        local pair_winds = 0
+        for _, count in pairs(wind_counts) do
+            if count == 3 then
+                completed_winds = completed_winds + 1
+            elseif count == 2 then
+                pair_winds = pair_winds + 1
+            end
+        end
+        if completed_winds == 3 and pair_winds == 1 then
+            return {hand}
+        else
+            return {}
+        end
+    end
+}
+
+SMODS.PokerHand {
+    key = "Big Four Winds",
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
+    example = {{'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'bm_Wi_bm_S', true},
+               {'bm_Wi_bm_S', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_We', true},
+               {'bm_Wi_bm_We', true}, {'bm_Wi_bm_N', true}, {'bm_Wi_bm_N', true}, {'bm_Wi_bm_N', true}, {'H_A', true},
+               {'H_A', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        local wind_counts = {
+            ['bm_East'] = 0,
+            ['bm_South'] = 0,
+            ['bm_West'] = 0,
+            ['bm_North'] = 0
+        }
+        for j = 1, #hand do
+            local rank = SMODS.Ranks[hand[j].base.value]
+            if wind_counts[rank.key] ~= nil then
+                wind_counts[rank.key] = wind_counts[rank.key] + 1
+            end
+        end
+        local completed_winds = 0
+        for _, count in pairs(wind_counts) do
+            if count == 3 then
+                completed_winds = completed_winds + 1
+            end
+        end
+        if completed_winds == 4 then
+            return {hand}
+        else
+            return {}
+        end
     end
 }
 
