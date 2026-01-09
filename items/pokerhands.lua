@@ -204,6 +204,68 @@ end
 -- One Han
 
 SMODS.PokerHand {
+    key = "DragonTriplet",
+    mult = 20,
+    chips = 200,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'bm_D_bm_R', true}, {'bm_D_bm_R', true}, {'bm_D_bm_R', true}, {'C_5', true}, {'C_6', true},
+               {'C_7', true}, {'D_4', true}, {'D_5', true}, {'D_6', true}, {'H_5', true}, {'H_6', true}, {'H_7', true},
+               {'C_9', true}, {'C_9', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+
+        local rank_counts = {}
+
+        for i = 1, #hand do
+            local card = hand[i]
+            if card:is_suit("bm_Dragons", nil, true) then
+                local rank = card.base.value
+                rank_counts[rank] = (rank_counts[rank] or 0) + 1
+                if rank_counts[rank] >= 3 then
+                    return {hand}
+                end
+            end
+        end
+
+        return {}
+    end
+}
+
+SMODS.PokerHand {
+    key = "WindTriplet",
+    mult = 20,
+    chips = 200,
+    l_mult = 6,
+    l_chips = 60,
+    example = {{'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'bm_Wi_bm_E', true}, {'C_5', true}, {'C_6', true},
+               {'C_7', true}, {'D_4', true}, {'D_5', true}, {'D_6', true}, {'H_5', true}, {'H_6', true}, {'H_7', true},
+               {'C_9', true}, {'C_9', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+
+        local rank_counts = {}
+
+        for i = 1, #hand do
+            local card = hand[i]
+            if card:is_suit("bm_Winds", nil, true) then
+                local rank = card.base.value
+                rank_counts[rank] = (rank_counts[rank] or 0) + 1
+                if rank_counts[rank] >= 3 then
+                    return {hand}
+                end
+            end
+        end
+
+        return {}
+    end
+}
+
+SMODS.PokerHand {
     key = "Tanyao",
     mult = 20,
     chips = 200,

@@ -1,4 +1,4 @@
-local yaku = {"bm_Tanyao", "bm_Honroutou", "bm_Chinroutou", "bm_SevenPairs", "bm_PureDoubleChi",
+local yaku = {"bm_WindTriplet", "bm_DragonTriplet", "bm_Tanyao", "bm_Honroutou", "bm_Chinroutou", "bm_SevenPairs", "bm_PureDoubleChi",
               "bm_TwicePureDoubleChi", "bm_OutsideHand", "bm_PureStraight", "bm_HalfFlush", "bm_FullFlush",
               "bm_ThirteenOrphans", "bm_Tsuiisou", "bm_LittleFourWinds", "bm_BigFourWinds", "bm_Junchan"}
 

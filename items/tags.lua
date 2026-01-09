@@ -1,4 +1,48 @@
 SMODS.Tag {
+    key = "WindTriplet",
+    pos = { x = 2, y = 1 },
+    config = { dollars = 1 },
+    loc_vars = function(self, info_queue, tag)
+        return { vars = { tag.config.dollars } }
+    end,
+    in_pool = function(self, args) return false end,
+    apply = function(self, tag, context)
+        if context.type == 'eval' then
+            tag:yep('+', G.C.GOLD, function() return true end)
+            tag.triggered = true
+            return {
+                dollars = tag.config.dollars,
+                condition = localize('ph_bm_WindTriplet'),
+                pos = tag.pos,
+                tag = tag
+            }
+        end
+    end
+}
+
+SMODS.Tag {
+    key = "DragonTriplet",
+    pos = { x = 2, y = 1 },
+    config = { dollars = 1 },
+    loc_vars = function(self, info_queue, tag)
+        return { vars = { tag.config.dollars } }
+    end,
+    in_pool = function(self, args) return false end,
+    apply = function(self, tag, context)
+        if context.type == 'eval' then
+            tag:yep('+', G.C.GOLD, function() return true end)
+            tag.triggered = true
+            return {
+                dollars = tag.config.dollars,
+                condition = localize('ph_bm_DragonTriplet'),
+                pos = tag.pos,
+                tag = tag
+            }
+        end
+    end
+}
+
+SMODS.Tag {
     key = "Tanyao",
     pos = { x = 2, y = 1 },
     config = { dollars = 1 },

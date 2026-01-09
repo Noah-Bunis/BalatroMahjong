@@ -21,79 +21,87 @@ return {
             }
         },
         Tag = {
+            tag_bm_WindTriplet = {
+                name = "Wind Triplet Yaku",
+                text = {"Reward for scoring a {C:red}Wind Triplet{} ({C:money}$1{})"}
+            }, -- 1 han
+            tag_bm_DragonTriplet = {
+                name = "Dragon Triplet Yaku",
+                text = {"Reward for scoring a {C:red}Dragon Triplet{} ({C:money}$1{})"}
+            }, -- 1 han
             tag_bm_Tanyao = {
                 name = "Tanyao Yaku",
-                text = {"Reward for scoring {C:red}Tanyao{} ({C:money}$#1#{})"}
+                text = {"Reward for scoring a {C:red}Tanyao{} ({C:money}$1{})"}
             }, -- 1 han
 
             tag_bm_Honroutou = {
                 name = "All Terminals and Honors Yaku",
-                text = {"Reward for scoring {C:red}All Terminals and Honors{} ({C:money}$#2#{})"}
+                text = {"Reward for scoring a {C:red}All Terminals and Honors{} ({C:money}$2{})"}
             }, -- 2 han
 
             tag_bm_Chinroutou = {
                 name = "All Terminals Yaku",
-                text = {"Reward for scoring {C:red}All Terminals{} ({C:money}$#13#{})"}
+                text = {"Reward for scoring a {C:red}All Terminals{} ({C:money}$13{})"}
             }, -- Yakuman
 
             tag_bm_SevenPairs = {
                 name = "Seven Pairs Yaku",
-                text = {"Reward for scoring {C:red}Seven Pairs{} ({C:money}$#2#{})"}
+                text = {"Reward for scoring a {C:red}Seven Pairs{} ({C:money}$2{})"}
             }, -- 2 han
 
             tag_bm_PureDoubleChi = {
                 name = "Pure Double Chi Yaku",
-                text = {"Reward for scoring {C:red}Pure Double Chi{} ({C:money}$#1#{})"}
+                text = {"Reward for scoring a {C:red}Pure Double Chi{} ({C:money}$1{})"}
             }, -- 1 han
 
             tag_bm_TwicePureDoubleChi = {
                 name = "Twice Pure Double Chi Yaku",
-                text = {"Reward for scoring {C:red}Twice Pure Double Chi{} ({C:money}$#3#{})"}
+                text = {"Reward for scoring a {C:red}Twice Pure Double Chi{} ({C:money}$3{})"}
             }, -- 3 han
 
             tag_bm_OutsideHand = {
                 name = "Outside Hand Yaku",
-                text = {"Reward for scoring {C:red}Outside Hand{} ({C:money}$#2#{})"}
+                text = {"Reward for scoring a {C:red}Outside Hand{} ({C:money}$2{})"}
             }, -- 2 han
 
             tag_bm_PureStraight = {
                 name = "Pure Straight Yaku",
-                text = {"Reward for scoring {C:red}Pure Straight{} ({C:money}$#2#{})"}
+                text = {"Reward for scoring a {C:red}Pure Straight{} ({C:money}$2{})"}
             }, -- 2 han
 
             tag_bm_HalfFlush = {
                 name = "Half Flush Yaku",
-                text = {"Reward for scoring {C:red}Half Flush{} ({C:money}$#3#{})"}
+                text = {"Reward for scoring a {C:red}Half Flush{} ({C:money}$3{})"}
             }, -- 3 han
 
             tag_bm_FullFlush = {
                 name = "Full Flush Yaku",
-                text = {"Reward for scoring {C:red}Full Flush{} ({C:money}$#6#{})"}
+                text = {"Reward for scoring a {C:red}Full Flush{} ({C:money}$6{})"}
             }, -- 6 han
 
             tag_bm_ThirteenOrphans = {
                 name = "Thirteen Orphans Yaku",
-                text = {"Reward for scoring {C:red}Thirteen Orphans{} ({C:money}$#13#{})"}
+                text = {"Reward for scoring a {C:red}Thirteen Orphans{} ({C:money}$13{})"}
             }, -- Yakuman
 
             tag_bm_Tsuiisou = {
                 name = "All Honors Yaku",
-                text = {"Reward for scoring {C:red}All Honors{} ({C:money}$#13#{})"}
+                text = {"Reward for scoring a {C:red}All Honors{} ({C:money}$13{})"}
             }, -- Yakuman
 
             tag_bm_LittleFourWinds = {
                 name = "Little Four Winds Yaku",
-                text = {"Reward for scoring {C:red}Little Four Winds{} ({C:money}$#13#{})"}
+                text = {"Reward for scoring a {C:red}Little Four Winds{} ({C:money}$13{})"}
             }, -- Yakuman
 
             tag_bm_BigFourWinds = {
                 name = "Big Four Winds Yaku",
-                text = {"Reward for scoring {C:red}Big Four Winds{} ({C:money}$#13#{})"}
+                text = {"Reward for scoring a {C:red}Big Four Winds{} ({C:money}$13{})"}
             }, -- Yakuman
 
             tag_bm_Junchan = {
                 name = "Terminal in Each Group Yaku",
-                text = {"Reward for scoring {C:red}Terminal in Each Group{} ({C:money}$#3#{})"}
+                text = {"Reward for scoring a {C:red}Terminal in Each Group{} ({C:money}$3{})"}
             } -- 3 han
 
         },
@@ -170,6 +178,8 @@ return {
             a_xmult = "X#1# Mult",
             a_xmult_minus = "-X#1# Mult",
 
+            ph_bm_WindTriplet = "Wind Triplet",
+            ph_bm_DragonTriplet = "Dragon Triplet",
             ph_bm_Tanyao = "Tanyao",
             ph_bm_Honroutou = "All Terminals and Honors",
             ph_bm_Chinroutou = "All Terminals",
@@ -189,6 +199,8 @@ return {
         },
 
         poker_hand_descriptions = {
+            ["bm_WindTriplet"] = {"A Mahjong hand that contains a triplet of Wind cards"},
+            ["bm_DragonTriplet"] = {"A Mahjong hand that contains a triplet of Dragon cards"},
             ["bm_Tanyao"] = {"A Mahjong hand that does not contain any honor cards or terminals (Kings or Aces)."},
             ["bm_Honroutou"] = {"A Mahjong hand that contains only honor cards or terminals (Kings or Aces)."},
             ["bm_Chinroutou"] = {"A Mahjong hand that contains only terminals (Kings or Aces)."},
@@ -206,6 +218,8 @@ return {
             ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (Kings or Aces)."}
         },
         poker_hands = {
+            ["bm_WindTriplet"] = "Wind Triplet",
+            ["bm_DragonTriplet"] = "Dragon Triplet",
             ["bm_Tanyao"] = "Tanyao",
             ["bm_Honroutou"] = "All Terminals and Honors",
             ["bm_Chinroutou"] = "All Terminals",

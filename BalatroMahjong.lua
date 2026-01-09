@@ -2,19 +2,20 @@ BalatroMahjong = {}
 
 assert(SMODS.load_file("globals.lua"))()
 
+--[[
 -- Jokers
 local joker_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "jokers")
 for _, file in ipairs(joker_src) do
     assert(SMODS.load_file("jokers/" .. file))()
+end ]]
+
+
+local items_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "items")
+for _, file in ipairs(items_src) do
+    assert(SMODS.load_file("items/" .. file))()
 end
 
--- Poker Hands
-local pokerhands_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "pokerhands")
-for _, file in ipairs(pokerhands_src) do
-    assert(SMODS.load_file("pokerhands/" .. file))()
-end
-
--- Decks
+--[[ Decks
 local decks_src = NFS.getDirectoryItems(SMODS.current_mod.path .. "decks")
 for _, file in ipairs(decks_src) do
     assert(SMODS.load_file("decks/" .. file))()
@@ -44,3 +45,4 @@ for _, file in ipairs(tags_src) do
     assert(SMODS.load_file("tags/" .. file))()
 end
 
+]]
