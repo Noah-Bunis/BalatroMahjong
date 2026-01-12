@@ -1,6 +1,7 @@
-local yaku = {"bm_WindTriplet", "bm_DragonTriplet", "bm_Tanyao", "bm_Honroutou", "bm_Chinroutou", "bm_SevenPairs", "bm_PureDoubleChi",
-              "bm_TwicePureDoubleChi", "bm_OutsideHand", "bm_PureStraight", "bm_HalfFlush", "bm_FullFlush",
-              "bm_ThirteenOrphans", "bm_Tsuiisou", "bm_LittleFourWinds", "bm_BigFourWinds", "bm_Junchan"}
+local yaku = {"bm_WindTriplet", "bm_DragonTriplet", "bm_Tanyao", "bm_Honroutou", "bm_Chinroutou", "bm_SevenPairs",
+              "bm_PureDoubleChi", "bm_TwicePureDoubleChi", "bm_OutsideHand", "bm_PureStraight", "bm_HalfFlush",
+              "bm_FullFlush", "bm_ThirteenOrphans", "bm_Tsuiisou", "bm_LittleFourWinds", "bm_BigFourWinds", "bm_Junchan"}
+local restricted_hands = {"Flush Five", "Flush House", "Straight Flush", "Royal Flush"}
 
 SMODS.current_mod.calculate = function(self, context)
     if context.before then
@@ -14,6 +15,17 @@ SMODS.current_mod.calculate = function(self, context)
                         return true
                     end
                 }))
+            end
+        end
+    end
+    if context.debuff_hand then
+        if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') and #context.full_hand > 5 then
+            for i = 1, #restricted_hands do
+                if context.scoring_name == restricted_hands[i] then
+                    return {
+                        debuff = true
+                    }
+                end
             end
         end
     end
