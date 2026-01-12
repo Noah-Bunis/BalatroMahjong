@@ -70,7 +70,7 @@ SMODS.Back {
     },
     config = {
         discards = 1,
-        hand_size = 10,
+        hand_size = 14,
         ante_scaling = 4
     },
     loc_vars = function(self, info_queue, back)
@@ -96,7 +96,7 @@ SMODS.Back {
     },
     config = {
         hands = 1,
-        hand_size = 10,
+        hand_size = 14,
         ante_scaling = 4
     },
     loc_vars = function(self, info_queue, back)
@@ -122,7 +122,7 @@ SMODS.Back {
     },
     config = {
         dollars = 10,
-        hand_size = 10,
+        hand_size = 14,
         ante_scaling = 4
     },
     loc_vars = function(self, info_queue, back)
@@ -150,7 +150,7 @@ SMODS.Back {
         extra_hand_bonus = 2,
         extra_discard_bonus = 1,
         no_interest = true,
-        hand_size = 10,
+        hand_size = 14,
         ante_scaling = 4
     },
     loc_vars = function(self, info_queue, back)
@@ -162,6 +162,33 @@ SMODS.Back {
         G.E_MANAGER:add_event(Event({
             func = function()
                 construct_mahjong_deck()
+                return true
+            end
+        }))
+    end
+}
+
+SMODS.Back {
+    key = "mahjong_true",
+    pos = {
+        x = 3,
+        y = 3
+    },
+    config = {
+        discards = 17,
+        hand_size = 14,
+        ante_scaling = 4
+    },
+    loc_vars = function(self, intro_queue, back)
+            return {
+                vars = {self.config.discards, self.config.hand_size, self.config.ante_scaling}
+            }
+    end,
+    apply = function(self, back)
+        G.E_MANAGER:add_event(Event({
+            func = function()
+                construct_mahjong_deck()
+                SMODS.change_discard_limit(-13)
                 return true
             end
         }))

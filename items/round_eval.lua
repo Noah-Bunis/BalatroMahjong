@@ -19,6 +19,13 @@ SMODS.current_mod.calculate = function(self, context)
         end
     end
     if context.debuff_hand then
+        if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong_true') then
+            if not string.find(context.scoring_name, 'bm_') then
+                return {
+                    debuff = true
+                }
+            end
+        end
         if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') and #context.full_hand > 5 then
             for i = 1, #restricted_hands do
                 if context.scoring_name == restricted_hands[i] then
