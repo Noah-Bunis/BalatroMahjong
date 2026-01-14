@@ -2,26 +2,8 @@ local function construct_mahjong_deck()
     SMODS.change_play_limit(9)
     SMODS.change_discard_limit(9)
 
-    local suits_to_remove = {'bm_Dragons', 'bm_Winds'}
-    local ranks_to_remove = {'bm_East', 'bm_South', 'bm_West', 'bm_North', 'bm_White', 'bm_Green', 'bm_Red'}
     local regular_suits = {'S', 'C', 'D', 'H'}
     local regular_ranks = {'2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'}
-
-    for _, suit in ipairs(suits_to_remove) do
-        for _, playing_card in ipairs(G.deck.cards) do
-            if playing_card.base.suit == suit then
-                SMODS.destroy_cards(playing_card)
-            end
-        end
-    end
-
-    for _, rank in ipairs(ranks_to_remove) do
-        for _, playing_card in ipairs(G.deck.cards) do
-            if playing_card.base.value == rank then
-                SMODS.destroy_cards(playing_card)
-            end
-        end
-    end
 
     for i = 1, 3 do
         for _, suit in ipairs(regular_suits) do
@@ -39,7 +21,7 @@ local function construct_mahjong_deck()
     local winds = {'bm_North', 'bm_East', 'bm_South', 'bm_West'}
     local dragons = {'bm_Red', 'bm_Green', 'bm_White'}
     for _, wind in ipairs(winds) do
-        for i = 1, 4 do
+        for i = 1, 3 do
             local card = SMODS.add_card({
                 set = 'Base',
                 area = G.deck,
@@ -50,7 +32,7 @@ local function construct_mahjong_deck()
     end
 
     for _, dragon in ipairs(dragons) do
-        for i = 1, 4 do
+        for i = 1, 3 do
             local card = SMODS.add_card({
                 set = 'Base',
                 area = G.deck,

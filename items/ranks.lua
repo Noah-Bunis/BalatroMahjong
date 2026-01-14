@@ -9,7 +9,11 @@ SMODS.Rank {
     next = {"bm_East"},
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Winds" then
+                    return true
+                end
+            end
         end
     end
 }
@@ -23,7 +27,11 @@ SMODS.Rank {
     next = {"bm_South"},
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Winds" then
+                    return true
+                end
+            end
         end
     end
 }
@@ -37,7 +45,11 @@ SMODS.Rank {
     next = {"bm_West"},
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Winds" then
+                    return true
+                end
+            end
         end
     end
 }
@@ -51,10 +63,15 @@ SMODS.Rank {
     next = {"bm_North"},
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')then 
+                if args and args.suit == "bm_Winds" then
+                    return true
+                end
+            end
         end
     end
 }
+
 -- Dragons
 SMODS.Rank {
     key = 'Red',
@@ -65,7 +82,11 @@ SMODS.Rank {
     shorthand = 'R',
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Dragons" then
+                    return true
+                end
+            end
         end
     end
 }
@@ -78,7 +99,11 @@ SMODS.Rank {
     shorthand = 'G',
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Dragons" then
+                    return true
+                end
+            end
         end
     end
 }
@@ -91,7 +116,11 @@ SMODS.Rank {
     shorthand = 'Wh',
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong')
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                if args and args.suit == "bm_Dragons" then
+                    return true
+                end
+            end
         end
     end
 }

@@ -9,6 +9,8 @@ SMODS.current_mod.calculate = function(self, context)
             if next(context.poker_hands[yaku[i]]) then
                 G.E_MANAGER:add_event(Event({
                     func = function()
+                        if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong_true') then 
+                            add_tag(Tag(("tag_double"))) add_tag(Tag(("tag_double"))) end
                         add_tag(Tag(("tag_" .. yaku[i])))
                         play_sound('generic1', 0.9 + math.random() * 0.1, 0.8)
                         play_sound('holo1', 1.2 + math.random() * 0.1, 0.4)

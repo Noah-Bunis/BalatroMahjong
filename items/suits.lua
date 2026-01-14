@@ -3,12 +3,28 @@ SMODS.Suit {
     card_key = 'Wi',
     lc_atlas = 'bm_honors',
     hc_atlas = 'bm_honors',
-    pos = {x = 0, y = 0},
-    ui_pos = {x=0,y=0},
+    pos = {
+        x = 0,
+        y = 0
+    },
+    ui_pos = {
+        x = 0,
+        y = 0
+    },
     keep_base_colors = true,
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return G.GAME.selected_back.effect.center.key == 'b_bm_mahjong_red'
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                local legal_ranks = {
+                    bm_North = true,
+                    bm_East = true,
+                    bm_South = true,
+                    bm_West = true
+                }
+                if args and legal_ranks[args.rank] then
+                    return true
+                end
+            end
         end
     end
 }
@@ -17,17 +33,32 @@ SMODS.Suit {
     card_key = 'D',
     lc_atlas = 'bm_honors',
     hc_atlas = 'bm_honors',
-    pos = {x = 0, y = 0},
-    ui_pos = {x=0,y=0},
+    pos = {
+        x = 0,
+        y = 0
+    },
+    ui_pos = {
+        x = 0,
+        y = 0
+    },
     keep_base_colors = true,
     in_pool = function(self, args)
         if G.GAME.selected_back then
-            return G.GAME.selected_back.effect.center.key == 'b_bm_mahjong_red'
+            if string.find(G.GAME.selected_back.effect.center.key, 'b_bm_mahjong') then
+                local legal_ranks = {
+                    bm_Red = true,
+                    bm_White = true,
+                    bm_Green = true
+                }
+                if args and legal_ranks[args.rank] then
+                    return true
+                end
+            end
         end
     end
 }
 
-SMODS.Atlas{
+SMODS.Atlas {
     key = "bm_honors",
     path = "honors.png",
     px = 71,

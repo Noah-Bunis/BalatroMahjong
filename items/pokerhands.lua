@@ -181,28 +181,6 @@ local function get_chows(hand)
     return chow_patterns
 end
 
---[[ 
-        local nine_gates
-        nine_gates = function(hand)
-            if not full_flush(hand) and pure_straight(hand) then
-                return false
-            end
-            local ace_count = 0
-            local ten_count = 0
-            for i = 1, #hand do
-                local rank = SMODS.Ranks[hand[i].base.value]
-                if rank.key == "Ace" then
-                    ace_count = ace_count + 1
-                elseif rank.key == "10" then
-                    ten_count = ten_count + 1
-                end
-            end
-            return ace_count >= 3 and ten_count >= 3
-        end
---]]
-
--- One Han
-
 SMODS.PokerHand {
     key = "DragonTriplet",
     mult = 20,
@@ -525,9 +503,11 @@ SMODS.PokerHand {
             local suit = SUITS[j]
             local has_suit = false
             local all_valid = true
+            local flush_count = 0
             for i = 1, #hand do
                 if hand[i]:is_suit(suit, nil, true) then
                     has_suit = true
+                    flush_count = flush_count + 1
                 else
                     local rank = SMODS.Ranks[hand[i].base.value]
                     if not rank.bm_honor then
@@ -537,6 +517,7 @@ SMODS.PokerHand {
                 end
             end
             if has_suit and all_valid then
+                if flush_count == 14 then return {} end
                 return {hand}
             end
         end
@@ -773,7 +754,7 @@ SMODS.PokerHand {
     chips = 320,
     l_mult = 10,
     l_chips = 100,
-    example = {{'S_A', true}, {'C_A', true}, {'H_A', true}, {'S_K', true}, {'C_K', true}, {'D_K', true}, {'H_K', true},
+    example = {{'S_A', true}, {'S_A', true}, {'H_A', true}, {'S_K', true}, {'C_K', true}, {'D_K', true}, {'H_K', true},
                {'bm_Wi_bm_E', true}, {'bm_Wi_bm_S', true}, {'bm_Wi_bm_We', true}, {'bm_Wi_bm_N', true},
                {'bm_D_bm_R', true}, {'bm_D_bm_G', true}, {'bm_D_bm_Wh', true}},
     evaluate = function(parts, hand)
@@ -790,7 +771,7 @@ SMODS.PokerHand {
         if #hand ~= 14 then
             return {}
         end
-        if #parts.bm_unique_flush_2 > 0 then
+        if #parts.bm_unique_flush_2 > 1 then
             return {}
         end
         for i = 1, #hand do
@@ -812,6 +793,61 @@ SMODS.PokerHand {
             end
         end
         return {hand}
+    end
+}
+
+SMODS.PokerHand {
+    key = "NineGates",
+    mult = 32,
+    chips = 320,
+    l_mult = 10,
+    l_chips = 100,
+    example = {{'H_A', true}, {'H_A', true}, {'H_A', true}, {'H_2', true}, {'H_3', true}, {'H_4', true}, {'H_5', true},
+               {'H_6', true}, {'H_7', true}, {'H_8', true}, {'H_9', true}, {'H_9', true}, {'H_9', true}, {'H_2', true}},
+    evaluate = function(parts, hand)
+        if not (#parts.bm_mahjong > 0) then
+            return {}
+        end
+        for j = 1, #SUITS do
+            local suit = SUITS[j]
+            local counts = {0, 0, 0, 0, 0, 0, 0, 0, 0}
+            for i = 1, #hand do
+                if hand[i]:is_suit(suit, nil, true) then
+                    local rank = SMODS.Ranks[hand[i].base.value]
+                    if rank.key == "Ace" then
+                        counts[0] = counts[0] + 1
+                    elseif rank.key == "2" then
+                        counts[1] = counts[1] + 1
+                    elseif rank.key == "3" then
+                        counts[2] = counts[2] + 1
+                    elseif rank.key == "4" then
+                        counts[3] = counts[3] + 1
+                    elseif rank.key == "5" then
+                        counts[4] = counts[4] + 1
+                    elseif rank.key == "6" then
+                        counts[5] = counts[5] + 1
+                    elseif rank.key == "7" then
+                        counts[6] = counts[6] + 1
+                    elseif rank.key == "8" then
+                        counts[7] = counts[7] + 1
+                    elseif rank.key == "9" then
+                        counts[8] = counts[8] + 1
+                    end
+                end
+            end
+            if counts[0] ~= 3 then return {} end
+            if counts[8] ~= 3 then return {} end
+            local gates = 0
+            for j = 0, 8 do
+                if counts[j] then
+                    gates = gates + 1
+                end
+            end
+            if gates == 9 then
+                return {hand}
+            end
+        end
+        return {}
     end
 }
 

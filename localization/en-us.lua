@@ -21,7 +21,8 @@ return {
             },
             b_bm_mahjong_true = {
                 name = "True Mahjong Deck",
-                text = {"{C:attention}Standard Mahjong Deck{}", "{C:red}20{} discards", "{C:red}1{} card per discard", "{C:red}Can only play Mahjong hands{}"}
+                text = {"{C:attention}Standard Mahjong Deck{}", "{C:red}20{} discards", "{C:red}1{} card per discard", "{C:red,E:1}Can only play Mahjong hands{}",
+            "{s:0.85}(It is reccomended to play this deck on 4x play speed)"}
             }
         },
         Tag = {
@@ -106,7 +107,12 @@ return {
             tag_bm_Junchan = {
                 name = "Terminal in Each Group Yaku",
                 text = {"Reward for scoring a {C:red}Terminal in Each Group{} ({C:money}$3{})"}
-            } -- 3 han
+            }, -- 3 han
+
+            tag_bm_NineGates = {
+                name = "Nine Gates",
+                text = {"Reward for scoring a {C:red}Nine Gates{} ({C:money}$13{})"}
+            } -- Yakuman
 
         },
         Joker = {
@@ -198,7 +204,8 @@ return {
             ph_bm_Tsuiisou = "All Honors",
             ph_bm_LittleFourWinds = "Little Four Winds",
             ph_bm_BigFourWinds = "Big Four Winds",
-            ph_bm_Junchan = "Terminal in Each Group"
+            ph_bm_Junchan = "Terminal in Each Group",
+            ph_bm_NineGates = "Nine Gates"
 
         },
 
@@ -219,7 +226,8 @@ return {
             ["bm_Tsuiisou"] = {"A Mahjong hand that contains only honor tiles."},
             ["bm_LittleFourWinds"] = {"A Mahjong hand that contains Pungs or Kongs of three Winds and a Pair of the fourth Wind."},
             ["bm_BigFourWinds"] = {"A Mahjong hand that contains Pungs or Kongs of all four Winds."},
-            ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (Kings or Aces)."}
+            ["bm_Junchan"] = {"A Mahjong hand where all sets contain at least one terminal (Kings or Aces)."},
+            ["bm_NineGates"] = {"A Mahjong hand of all the same suit containing 1112345678999"}
         },
         poker_hands = {
             ["bm_WindTriplet"] = "Wind Triplet",
@@ -238,7 +246,8 @@ return {
             ["bm_Tsuiisou"] = "All Honors",
             ["bm_LittleFourWinds"] = "Little Four Winds",
             ["bm_BigFourWinds"] = "Big Four Winds",
-            ["bm_Junchan"] = "Terminal in Each Group"
+            ["bm_Junchan"] = "Terminal in Each Group",
+            ["bm_NineGates"] = "Nine Gates"
         },
         ranks = {
             bm_North = "North",
